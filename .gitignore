@@ -5,3 +5,5 @@
 *.bin
 *.zip
 .verilog/
+CODEX.md
+docs/09_codex_instructions.md
