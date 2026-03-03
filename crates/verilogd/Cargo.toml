@@ -1,0 +1,29 @@
+[package]
+name = "verilogd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+verilog-core = { path = "../verilog-core" }
+verilog-license = { path = "../verilog-license" }
+verilog-enterprise-api = { path = "../verilog-enterprise-api" }
+
+# Optional admin console
+axum = { workspace = true, optional = true }
+tokio = { workspace = true, optional = true }
+tower-http = { workspace = true, optional = true }
+
+[features]
+default = []
+admin-console = ["dep:axum", "dep:tokio", "dep:tower-http"]
+# The `enterprise` feature is a compile-time hook for private builds.
+# In this OSS repo it only enables stub wiring.
+enterprise = []

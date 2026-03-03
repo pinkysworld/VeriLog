@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VeriLog | Verifiable Edge Evidence</title>
+    <meta
+      name="description"
+      content="VeriLog is a Rust-based edge logging engine for tamper-evident device evidence, privacy-aware telemetry, and future zero-knowledge integrity proofs."
+    >
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <nav class="topbar">
+          <a class="brand" href="./index.html">VeriLog</a>
+          <div class="nav-links">
+            <a href="#prototype">Prototype</a>
+            <a href="#research">Research</a>
+            <a href="#roadmap">Roadmap</a>
+          </div>
+        </nav>
+
+        <div class="hero-copy">
+          <p class="eyebrow">Rust edge systems · auditable by design</p>
+          <h1>Build logs you can prove, not just collect.</h1>
+          <p class="lede">
+            VeriLog turns device telemetry into a verifiable evidence stream:
+            append-only records, signed checkpoints, privacy-aware payloads, and
+            a clear path toward zero-knowledge integrity proofs.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#prototype">Explore The Prototype</a>
+            <a class="button secondary" href="#research">See The Novelty Program</a>
+          </div>
+        </div>
+
+        <section class="hero-band">
+          <article class="stat-card">
+            <span class="stat-value">1</span>
+            <span class="stat-label">single binary</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-value">4</span>
+            <span class="stat-label">trust layers combined</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-value">MVP</span>
+            <span class="stat-label">prototype stage today</span>
+          </article>
+        </section>
+      </header>
+
+      <main>
+        <section class="section" id="prototype">
+          <div class="section-heading">
+            <p class="eyebrow">Shipping now</p>
+            <h2>What already runs</h2>
+          </div>
+          <div class="grid two-up">
+            <article class="panel feature-panel">
+              <h3>Operational core</h3>
+              <ul class="feature-list">
+                <li>append-only signed log records</li>
+                <li>Merkle-root commitments per entry</li>
+                <li>deterministic full-store verification</li>
+                <li>membership proof generation and verification</li>
+                <li>signed checkpoints for archival and anchoring</li>
+                <li>local admin console for demos and inspection</li>
+              </ul>
+            </article>
+            <article class="panel quote-panel">
+              <p>
+                The product is positioned as an <strong>evidence layer for edge
+                devices</strong>, not just a logging library. That framing is the
+                shortest path to a differentiated story.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section ribbon-section">
+          <div class="ribbon">
+            <span>tamper-evident</span>
+            <span>privacy-aware</span>
+            <span>portable proofs</span>
+            <span>zero-knowledge ready</span>
+          </div>
+        </section>
+
+        <section class="section" id="research">
+          <div class="section-heading">
+            <p class="eyebrow">Novel direction</p>
+            <h2>Why this can become genuinely novel</h2>
+          </div>
+          <div class="grid card-grid" id="track-grid"></div>
+        </section>
+
+        <section class="section" id="roadmap">
+          <div class="section-heading">
+            <p class="eyebrow">Execution</p>
+            <h2>Research sequence that preserves product momentum</h2>
+          </div>
+          <div class="grid roadmap-grid">
+            <article class="panel roadmap-step">
+              <span class="step-index">01</span>
+              <h3>Harden the base</h3>
+              <p>Durable writes, golden vectors, indexed proofs, safer admin access.</p>
+            </article>
+            <article class="panel roadmap-step">
+              <span class="step-index">02</span>
+              <h3>Ship checkpoint workflows</h3>
+              <p>Anchoring, third-party verification, and portable audit bundles.</p>
+            </article>
+            <article class="panel roadmap-step">
+              <span class="step-index">03</span>
+              <h3>Upgrade privacy surfaces</h3>
+              <p>Schema packs, accounting visibility, and policy-backed telemetry handling.</p>
+            </article>
+            <article class="panel roadmap-step">
+              <span class="step-index">04</span>
+              <h3>Parallel proof research</h3>
+              <p>Poseidon commitments, small-scope ZK experiments, and selective disclosure.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section final-cta">
+          <div class="panel cta-panel">
+            <p class="eyebrow">Deployment-ready presentation</p>
+            <h2>Use this page as the project showcase for GitHub Pages or `minh.systems`.</h2>
+            <p>
+              The site is fully static, uses relative asset paths, and is designed
+              to work both from a repository subpath and a custom domain mirror.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
