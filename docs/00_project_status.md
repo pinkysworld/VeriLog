@@ -56,7 +56,7 @@ is ready for external pilots.
 - **Structured configuration:** `config.toml` support with defaults for store, admin, privacy, and retention settings. Generated automatically on `init`.
 - **Golden vector test suite:** 8 deterministic test fixtures covering empty roots, hash chains, membership proofs, checkpoints, tamper detection, leaf hashes, and export format stability.
 - **Research agenda expansion:** 30 research tracks (R01–R30) across four pillars: integrity/ZK, privacy/DP, energy/efficiency, and federation/multi-device.
-- **Website redesign:** Professional multi-section site with submenus, architecture diagrams, security model, privacy pipeline, research pillars, novelty wedges, timeline roadmap, and separate documentation page.
+- **Website redesign:** Professional multi-section site with submenus, architecture diagrams, security model, privacy pipeline, research pillars, novelty wedges, timeline roadmap, and separate documentation page. All GitHub links point to the live repository. Phase 1 progress reflected in roadmap section.
 
 ## Delivery posture
 
@@ -77,7 +77,8 @@ It is **not** yet in the right state for:
 
 Turn the prototype into a pilot-ready system by focusing on:
 
-1. storage hardening
-2. benchmark harnesses
-3. external verification tooling
-4. clearer packaging of the novel privacy and proof roadmap
+1. indexed proof path for large stores
+2. CLI integration tests for status/checkpoint/export
+3. admin auth strategy (token-based)
+4. benchmark harnesses
+5. external verification tooling

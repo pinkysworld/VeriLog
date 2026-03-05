@@ -886,7 +886,12 @@ button { font: inherit; cursor: pointer; }
   font-size: 0.88rem;
   color: var(--ink-soft);
   line-height: 1.8;
+  list-style: none;
 }
+.timeline-content li { padding-left: 1em; text-indent: -1em; }
+.timeline-content li::before { content: "—  "; color: var(--ink-muted); }
+.timeline-content li.done-item { color: var(--green); }
+.timeline-content li.done-item::before { content: ""; }
 .timeline-badge {
   display: inline-block;
   margin-top: 14px;

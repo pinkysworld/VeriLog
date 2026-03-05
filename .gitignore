@@ -5,5 +5,14 @@
 *.bin
 *.zip
 .verilog/
+
+# AI / codex / agent scaffolding
 CODEX.md
 docs/09_codex_instructions.md
+docs/12_implementation_blueprint.md
+agents.md
+.agents*
+.codex*
+**/agents.md
+**/.agents*
+**/.codex*

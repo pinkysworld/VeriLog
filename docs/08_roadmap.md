@@ -14,7 +14,7 @@ while enterprise research tracks can proceed in parallel.
 - [x] Signed checkpoint snapshots
 - [x] License verification + entitlements (monetization foundation)
 - [x] Admin console MVP: dashboard + status/proof/checkpoint/research endpoints (optional feature)
-- [ ] Crash consistency hardening
+- [x] Crash consistency hardening (fsync boundaries)
 
 ## Phase 1 — Base hardening
 

@@ -50,7 +50,7 @@
             <a href="#roadmap">Roadmap</a>
             <a href="./docs.html">Docs</a>
           </div>
-          <a class="nav-cta" href="https://github.com">GitHub</a>
+          <a class="nav-cta" href="https://github.com/pinkysworld/VeriLog">GitHub</a>
         </div>
       </div>
     </nav>
@@ -118,8 +118,8 @@
           </div>
           <div class="stat-divider"></div>
           <div class="stat">
-            <span class="stat-number">0</span>
-            <span class="stat-desc">External service<br>dependencies</span>
+            <span class="stat-number">11</span>
+            <span class="stat-desc">Automated tests<br>passing</span>
           </div>
         </div>
       </div>
@@ -163,6 +163,16 @@
             <div class="feature-icon">&#128421;</div>
             <h3>Admin Console</h3>
             <p>Local HTTP dashboard for demo and inspection: status, proofs, checkpoints, and research instrumentation.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#9881;</div>
+            <h3>Structured Config</h3>
+            <p>TOML configuration with sensible defaults for tree height, admin bind, privacy budgets, and retention policies.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#128190;</div>
+            <h3>Durable Append</h3>
+            <p>Explicit fsync boundaries on entries, leaves, and atomic meta writes with parent directory sync for crash safety.</p>
           </article>
         </div>
       </div>
@@ -440,13 +450,16 @@
               <div class="timeline-phase">Phase 1 &mdash; Base Hardening</div>
               <h3>Production-Ready Core</h3>
               <ul>
-                <li>Power-loss safe append protocol (fsync)</li>
-                <li>Config system (TOML) with defaults</li>
-                <li>Golden vector test fixtures</li>
+                <li class="done-item">&#10003; Power-loss safe append protocol (fsync)</li>
+                <li class="done-item">&#10003; Config system (TOML) with defaults</li>
+                <li class="done-item">&#10003; Golden vector test fixtures (8 tests)</li>
+                <li>Indexed proof path for large stores</li>
+                <li>CLI integration tests</li>
+                <li>Admin auth strategy</li>
                 <li>Storage backend abstraction</li>
                 <li>Benchmark harness across device classes</li>
               </ul>
-              <span class="timeline-badge badge-active">In Progress</span>
+              <span class="timeline-badge badge-active">In Progress &mdash; 3/8 done</span>
             </div>
           </div>
           <div class="timeline-item">
@@ -501,7 +514,7 @@
           <h2>Ready to explore verifiable telemetry?</h2>
           <p>VeriLog is open-source and designed to be evaluated hands-on. Clone the repo, initialize a store, and see tamper-evident logging in action.</p>
           <div class="cta-actions">
-            <a class="btn btn-primary btn-lg" href="https://github.com">Get Started on GitHub</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/pinkysworld/VeriLog">Get Started on GitHub</a>
             <a class="btn btn-ghost" href="./docs.html">Read the Documentation</a>
           </div>
         </div>
@@ -534,7 +547,7 @@
             <h4>Project</h4>
             <a href="#roadmap">Roadmap</a>
             <a href="./docs.html">Documentation</a>
-            <a href="https://github.com">GitHub</a>
+            <a href="https://github.com/pinkysworld/VeriLog">GitHub</a>
           </div>
         </div>
         <div class="footer-bottom">
