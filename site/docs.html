@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documentation | VeriLog</title>
+    <meta name="description" content="Technical documentation for VeriLog — architecture, storage format, cryptography, privacy, and research.">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <a class="brand" href="./index.html">
+          <span class="brand-icon">&#9670;</span> VeriLog
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-menu" id="navMenu">
+          <div class="nav-group">
+            <a href="./index.html">Home</a>
+            <a href="./index.html#research">Research</a>
+            <a href="./index.html#roadmap">Roadmap</a>
+            <a href="./docs.html" style="color:var(--brand);font-weight:700;">Docs</a>
+          </div>
+          <a class="nav-cta" href="https://github.com">GitHub</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="docs-layout">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+          <h4>Getting Started</h4>
+          <a href="#overview" class="active">Overview</a>
+          <a href="#quickstart">Quick Start</a>
+          <a href="#cli-reference">CLI Reference</a>
+
+          <h4>Architecture</h4>
+          <a href="#system-design">System Design</a>
+          <a href="#crate-structure">Crate Structure</a>
+          <a href="#data-flow">Data Flow</a>
+          <a href="#trust-boundaries">Trust Boundaries</a>
+
+          <h4>Storage &amp; Crypto</h4>
+          <a href="#storage-format">Storage Format</a>
+          <a href="#hash-chain">Hash Chain</a>
+          <a href="#merkle-tree">Merkle Tree</a>
+          <a href="#checkpoints">Checkpoints</a>
+
+          <h4>Privacy</h4>
+          <a href="#dp-overview">Differential Privacy</a>
+          <a href="#budget-management">Budget Management</a>
+
+          <h4>Security</h4>
+          <a href="#threat-model">Threat Model</a>
+          <a href="#key-management">Key Management</a>
+
+          <h4>Licensing</h4>
+          <a href="#license-system">License System</a>
+          <a href="#enterprise-features">Enterprise Features</a>
+
+          <h4>Research</h4>
+          <a href="#research-tracks">Research Tracks</a>
+          <a href="#novelty-program">Novelty Program</a>
+        </aside>
+
+        <!-- Content -->
+        <main class="docs-content">
+          <h1 id="overview">VeriLog Documentation</h1>
+          <p>VeriLog is a Rust-based edge logging engine that turns device telemetry into a verifiable evidence stream. It provides append-only records, signed checkpoints, privacy-aware payloads, and a migration path toward zero-knowledge integrity proofs — all packaged as a single binary.</p>
+
+          <h2 id="quickstart">Quick Start</h2>
+          <h3>Build from source</h3>
+          <pre><code># Clone and build
+git clone https://github.com/your-org/verilog.git
+cd verilog
+cargo build --release -p verilogd
+
+# With admin console
+cargo build --release -p verilogd --features admin-console</code></pre>
+
+          <h3>Basic workflow</h3>
+          <pre><code># Initialize a new store
+verilogd init --store ./my-store
+
+# Append an entry
+verilogd append --store ./my-store --kind "sensor.temperature" \
+  --payload '{"value": 22.5, "unit": "celsius"}' --level info
+
+# Verify the entire store
+verilogd verify --store ./my-store
+
+# Generate a membership proof
+verilogd proof membership --store ./my-store --index 0 --out proof.json
+
+# Create a signed checkpoint
+verilogd checkpoint create --store ./my-store --label "daily-anchor"
+
+# Export as JSON lines
+verilogd export --store ./my-store --out export.jsonl</code></pre>
+
+          <h2 id="cli-reference">CLI Reference</h2>
+          <p>The <code>verilogd</code> binary provides the following commands:</p>
+          <ul>
+            <li><code>init</code> — Initialize a new log store with key generation</li>
+            <li><code>append</code> — Append a signed entry to the log</li>
+            <li><code>verify</code> — Verify the full integrity of a store</li>
+            <li><code>status</code> — Show store status (leaf count, root, last entry)</li>
+            <li><code>export</code> — Export entries as JSON Lines</li>
+            <li><code>proof membership</code> — Generate a Merkle membership proof</li>
+            <li><code>proof verify</code> — Verify a membership proof</li>
+            <li><code>checkpoint create</code> — Create a signed checkpoint snapshot</li>
+            <li><code>checkpoint verify</code> — Verify a checkpoint signature</li>
+            <li><code>license install|status|issue|vendor-keygen</code> — License management</li>
+            <li><code>serve</code> — Start the admin console HTTP server (requires feature flag)</li>
+          </ul>
+
+          <h2 id="system-design">System Design</h2>
+          <p>VeriLog is architected as a <strong>single executable</strong> (<code>verilogd</code>) that embeds a verifiable append-only log store, a license verifier, an optional admin console, and optional enterprise hooks.</p>
+
+          <h3 id="crate-structure">Crate Structure</h3>
+          <ul>
+            <li><strong>verilog-core</strong> — Core library: LogStore, MerkleFrontier, crypto, DP primitives, energy policy</li>
+            <li><strong>verilog-license</strong> — Ed25519-based license verification and device ID generation</li>
+            <li><strong>verilog-enterprise-api</strong> — Enterprise feature traits and hooks (OSS stubs only)</li>
+            <li><strong>verilogd</strong> — CLI binary integrating all crates with Clap argument parsing</li>
+          </ul>
+
+          <h3 id="data-flow">Data Flow</h3>
+          <h4>Append operation</h4>
+          <ol>
+            <li>Client calls <code>LogStore::append(kind, payload, level)</code></li>
+            <li>Store reads previous entry hash and Merkle frontier</li>
+            <li>Builds unsigned entry with hash chain link and rolling window commitment</li>
+            <li>Computes leaf hash, pushes to Merkle frontier, gets new root</li>
+            <li>Signs the entry hash with Ed25519</li>
+            <li>Appends record to <code>entries.bin</code>, leaf hash to <code>leaves.bin</code></li>
+            <li>Atomically updates <code>meta.json</code></li>
+          </ol>
+
+          <h4>Verification</h4>
+          <ol>
+            <li>Iterate all entries sequentially</li>
+            <li>Re-compute hash chain, window commitments, leaf hashes, Merkle roots</li>
+            <li>Verify every Ed25519 signature</li>
+            <li>Fail fast on any mismatch</li>
+          </ol>
+
+          <h3 id="trust-boundaries">Trust Boundaries</h3>
+          <p>The device running VeriLog may be partially compromised <em>after</em> evidence is captured. The log provides tamper-evidence for historical data. Enterprise features are gated by license checks and compiled only in private builds.</p>
+
+          <h2 id="storage-format">Storage Format</h2>
+          <p>Each store is a directory with four files:</p>
+          <ul>
+            <li><code>entries.bin</code> — Length-prefixed postcard-serialized log entries</li>
+            <li><code>leaves.bin</code> — Raw 32-byte leaf hashes, sequential</li>
+            <li><code>meta.json</code> — Store metadata: tree height, leaf count, frontier, previous hashes</li>
+            <li><code>signing_key.json</code> — Ed25519 keypair (generated on init)</li>
+          </ul>
+          <p>Entries use a length-delimited format: <code>[4-byte LE length][postcard bytes]</code>. This allows sequential reads without a separate index (index optimization is on the roadmap).</p>
+
+          <h2 id="hash-chain">Hash Chain</h2>
+          <p>Every entry stores the hash of the previous entry as <code>prev_entry_hash</code>. Entry index 0 uses a zero hash. This creates a linear chain — modifying any entry breaks all subsequent links.</p>
+          <p>Additionally, a <strong>rolling window hash</strong> (<code>window_hash = H(prev_window || prev_entry_hash)</code>) provides a sliding commitment for forensic post-compromise analysis.</p>
+
+          <h2 id="merkle-tree">Merkle Tree</h2>
+          <p>VeriLog uses a <strong>fixed-height incremental Merkle frontier</strong>. Only the frontier nodes (one per level) are kept in memory — not the full tree. Empty positions are padded with zero hashes.</p>
+          <ul>
+            <li><strong>Default height:</strong> 32 levels (supports ~4 billion entries)</li>
+            <li><strong>Update cost:</strong> O(height) per append</li>
+            <li><strong>Proof size:</strong> 32 × height bytes (sibling path)</li>
+            <li><strong>Hash function:</strong> BLAKE3</li>
+          </ul>
+
+          <h2 id="checkpoints">Checkpoints</h2>
+          <p>A signed checkpoint captures:</p>
+          <ul>
+            <li>Current Merkle root</li>
+            <li>Last entry hash</li>
+            <li>Leaf count</li>
+            <li>Timestamp</li>
+            <li>Verifying key (for self-contained verification)</li>
+            <li>Optional label</li>
+          </ul>
+          <p>Checkpoints are signed with the same Ed25519 key and can be verified independently. They serve as portable anchoring points for external timestamping and archival.</p>
+
+          <h2 id="dp-overview">Differential Privacy</h2>
+          <p>The base edition includes primitives for per-event differential privacy:</p>
+          <ul>
+            <li><strong>Laplace noise:</strong> Added to numeric telemetry values before they enter the evidence pipeline</li>
+            <li><strong>Token-bucket budget:</strong> Tracks cumulative ε consumption</li>
+            <li><strong>Integration point:</strong> Noise is applied <em>before</em> signing, so the signed record includes the privatized value</li>
+          </ul>
+
+          <h3 id="budget-management">Budget Management</h3>
+          <p>The privacy budget is a finite resource. Once exhausted, the system can either refuse to log sensitive values or fall back to high-redaction modes. Future work includes formal privacy accounting with verifiable budget proofs.</p>
+
+          <h2 id="threat-model">Threat Model</h2>
+          <p>VeriLog is designed under these assumptions:</p>
+          <ul>
+            <li>The device may be <strong>partially or fully compromised after</strong> evidence has been written</li>
+            <li>An adversary may attempt to <strong>modify, insert, delete, or truncate</strong> log entries</li>
+            <li>The signing key resides on-device and may be <strong>extracted after compromise</strong> (forward security is a future research track)</li>
+            <li>External anchoring (checkpoints sent to a remote system) provides <strong>tamper-evidence even against total device takeover</strong></li>
+          </ul>
+
+          <h3 id="key-management">Key Management</h3>
+          <p>Keys are generated on <code>init</code> and stored in <code>signing_key.json</code>. The current prototype does not implement key rotation or hardware-backed key storage — both are planned for Phase 1 hardening.</p>
+
+          <h2 id="license-system">License System</h2>
+          <p>VeriLog uses Ed25519-signed license files for enterprise feature gating:</p>
+          <ol>
+            <li>Vendor generates a keypair (<code>vendor-keygen</code>)</li>
+            <li>Vendor issues a signed license with entitlements, device binding, and validity window</li>
+            <li>Device installs the license (<code>license install</code>)</li>
+            <li>Runtime checks verify the license signature and entitlements before allowing enterprise operations</li>
+          </ol>
+
+          <h3 id="enterprise-features">Enterprise Features</h3>
+          <p>Enterprise features are defined in <code>verilog-enterprise-api</code> as trait-based hooks. The OSS base ships only the API surface — implementations live in the private enterprise crate. Current feature IDs include:</p>
+          <ul>
+            <li>ZK proof generation and verification</li>
+            <li>Compliance export bundles</li>
+            <li>Cross-device correlation</li>
+            <li>Advanced energy policies</li>
+          </ul>
+
+          <h2 id="research-tracks">Research Tracks (R01–R30)</h2>
+          <p>The research agenda spans 30 tracks across four pillars. See the <a href="./index.html#research">Research Agenda</a> section on the main page for the full listing. Key tracks by priority:</p>
+          <ol>
+            <li><strong>R04 / R09</strong> — Integrity primitives (shipped)</li>
+            <li><strong>R10</strong> — Checkpoint formalization and external anchoring</li>
+            <li><strong>R03</strong> — Per-event DP with accounting</li>
+            <li><strong>R02</strong> — ZK proof of log integrity (Poseidon experiment first)</li>
+            <li><strong>R14 / R20</strong> — Secure forwarding and mesh sync</li>
+          </ol>
+
+          <h2 id="novelty-program">Novelty Program</h2>
+          <p>The novelty program identifies four differentiation wedges that make VeriLog meaningfully different from other secure logging systems:</p>
+          <ul>
+            <li><strong>Wedge A:</strong> Evidence-first edge telemetry (not just logging)</li>
+            <li><strong>Wedge B:</strong> Privacy-preserving observability (DP on the proof surface)</li>
+            <li><strong>Wedge C:</strong> Verifiable archival and selective disclosure</li>
+            <li><strong>Wedge D:</strong> Multi-device evidence graphs (long-term research)</li>
+          </ul>
+          <p>Each wedge has defined validation criteria: benchmarks, verifier artifacts, demo transcripts, and clear threat assumptions.</p>
+        </main>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-bottom">
+          <p>&copy; 2026 VeriLog Project. Open-source under MIT/Apache-2.0.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Navbar scroll effect
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        navbar.classList.toggle("scrolled", window.scrollY > 10);
+      }, { passive: true });
+
+      // Mobile nav
+      const toggle = document.getElementById("navToggle");
+      const menu = document.getElementById("navMenu");
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => menu.classList.toggle("open"));
+      }
+
+      // Active sidebar link tracking
+      const sidebarLinks = document.querySelectorAll(".docs-sidebar a");
+      const sections = Array.from(sidebarLinks).map(a => {
+        const id = a.getAttribute("href").slice(1);
+        return { link: a, el: document.getElementById(id) };
+      }).filter(s => s.el);
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            sidebarLinks.forEach(l => l.classList.remove("active"));
+            const found = sections.find(s => s.el === entry.target);
+            if (found) found.link.classList.add("active");
+          }
+        });
+      }, { rootMargin: "-20% 0px -70% 0px" });
+
+      sections.forEach(s => observer.observe(s.el));
+    </script>
+  </body>
+</html>

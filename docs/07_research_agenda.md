@@ -1,4 +1,4 @@
-# Research Agenda (expanded beyond the 20-track blueprint)
+# Research Agenda (30 tracks across four pillars)
 
 This document expands the provided 20-track research blueprint into:
 - hypotheses and evaluation metrics
@@ -415,6 +415,231 @@ To keep the tracks comparable, create a shared benchmarking and evaluation setup
 
 ---
 
+## R21 Recursive Proof Aggregation
+
+**Hypothesis:** Multiple log integrity proofs (from different time ranges or devices) can be aggregated into a single succinct proof, reducing verification cost for auditors.
+
+**Milestones**
+1. Define proof composition interface: combine N range proofs into 1.
+2. Evaluate IVC (Incrementally Verifiable Computation) frameworks:
+   - Nova / SuperNova for folding-based approach
+   - Plonky3 recursion for STARK aggregation
+3. Build aggregator service that collects proofs from fleet devices.
+4. Benchmark: aggregated proof size vs N, verification time vs N.
+
+**Metrics**
+- aggregated proof size (should grow sub-linearly with N)
+- aggregator computation cost
+- verifier time for aggregated proof
+
+**Placement**
+- Enterprise only (hooks in OSS for proof format compatibility)
+
+---
+
+## R22 Post-Quantum Signature Migration
+
+**Hypothesis:** VeriLog can provide a migration path from Ed25519 to post-quantum signatures without breaking existing verification of historical records.
+
+**Milestones**
+1. Define dual-signature entry format: Ed25519 + PQ signature.
+2. Evaluate candidates:
+   - SPHINCS+ (hash-based, conservative)
+   - Dilithium/ML-DSA (lattice-based, compact)
+3. Implement PQ signature module behind feature flag.
+4. Define migration protocol: epoch-based transition with dual signing.
+5. Benchmark signature size, generation time, and verification time on ARM.
+
+**Metrics**
+- signature size overhead
+- signing latency on Cortex-M / ARM Linux
+- verification latency
+- storage overhead per entry
+
+**Placement**
+- Base: signature trait abstraction + migration protocol spec
+- Enterprise: PQ signature implementations + migration tooling
+
+---
+
+## R23 Federated Privacy Budget Governance
+
+**Hypothesis:** Multiple organizations sharing evidence from overlapping device populations can negotiate and enforce cross-organizational DP budgets.
+
+**Milestones**
+1. Define budget negotiation protocol: propose/accept/reject budget allocations.
+2. Implement budget ledger: cryptographic commitment to cumulative spend.
+3. Add ZK proof of budget compliance: prove ε_spent ≤ ε_allocated without revealing spend details.
+4. Integrate with R03 per-event DP and R13 aggregation.
+
+**Metrics**
+- protocol round-trip time
+- proof size for budget compliance
+- correctness under concurrent budget modifications
+
+**Placement**
+- Enterprise only
+
+---
+
+## R24 Synthetic Telemetry Generation
+
+**Hypothesis:** Privacy-safe synthetic datasets can be generated from DP-processed telemetry, enabling testing, model training, and data sharing without privacy risk.
+
+**Milestones**
+1. Implement statistical profile extraction from DP-processed logs.
+2. Build synthetic event generator respecting temporal and causal patterns.
+3. Add utility metrics: compare synthetic vs real data on downstream tasks.
+4. Add provenance tracking: link synthetic data to DP parameters used.
+
+**Metrics**
+- statistical fidelity (distribution distance metrics)
+- downstream task accuracy with synthetic vs real data
+- generation throughput
+- provenance verification time
+
+**Placement**
+- Base: profile extraction + simple generator
+- Enterprise: advanced generators, utility optimization, provenance proofs
+
+---
+
+## R25 Hardware-Accelerated Hashing
+
+**Hypothesis:** Leveraging hardware crypto extensions (ARM CE, AES-NI, RISC-V Crypto) for BLAKE3 and Poseidon can meaningfully reduce proof generation time and energy on constrained devices.
+
+**Milestones**
+1. Profile current BLAKE3 performance on target platforms.
+2. Evaluate BLAKE3 SIMD optimizations and ARM Crypto Extension paths.
+3. For Poseidon (ZK track): implement platform-specific field arithmetic.
+4. Build hardware-detection layer that selects optimal implementation at startup.
+5. Benchmark energy per hash operation across platforms.
+
+**Metrics**
+- hashes per second per platform
+- energy per hash (mJ)
+- proof generation speedup
+- binary size impact of platform-specific code
+
+**Placement**
+- Base: BLAKE3 acceleration + detection layer
+- Enterprise: Poseidon acceleration for ZK tracks
+
+---
+
+## R26 Decentralized Timestamping Anchors
+
+**Hypothesis:** Anchoring signed checkpoints to multiple independent timestamping sources provides stronger tamper-evidence guarantees than any single anchor.
+
+**Milestones**
+1. Define generic anchoring interface trait.
+2. Implement RFC 3161 timestamp authority client.
+3. Implement Certificate Transparency log submission adapter.
+4. Implement blockchain anchoring adapter (Bitcoin OP_RETURN or Ethereum).
+5. Build multi-anchor checkpoint bundle format with proof of inclusion for each.
+6. Define anchor freshness and redundancy policies.
+
+**Metrics**
+- time-to-anchor per target
+- cost per anchor (financial, bandwidth)
+- verification complexity with N anchors
+- availability/redundancy improvement
+
+**Placement**
+- Base: anchoring trait + RFC 3161 client
+- Enterprise: CT log, blockchain adapters, multi-anchor bundles
+
+---
+
+## R27 Verifiable Log Format Migration
+
+**Hypothesis:** When the log format evolves (new entry fields, changed serialization), the migration can be proven correct so auditors trust migrated archives.
+
+**Milestones**
+1. Define format versioning protocol with explicit migration functions.
+2. Implement deterministic migration: old format → new format with re-signed entries.
+3. Generate migration proof: ZK or Merkle-based proof that migrated data is semantically equivalent.
+4. Build migration verification tool.
+
+**Metrics**
+- migration throughput (entries/sec)
+- proof size for migration correctness
+- verification time for migration proof
+- backward compatibility coverage
+
+**Placement**
+- Base: format versioning + deterministic migration
+- Enterprise: migration proofs + verification tooling
+
+---
+
+## R28 Privacy-Preserving Log Search
+
+**Hypothesis:** Encrypted search indexes can enable querying log stores without decrypting entries, preserving confidentiality during audits.
+
+**Milestones**
+1. Evaluate searchable symmetric encryption (SSE) schemes for log data.
+2. Implement keyword-based encrypted index alongside the plain log.
+3. Add range query support for timestamps and numeric fields.
+4. Benchmark search latency and index size overhead.
+5. Define access control: who holds search tokens, revocation.
+
+**Metrics**
+- search latency vs plaintext baseline
+- index size overhead (bytes per entry)
+- leakage profile (what the index reveals)
+- token generation and revocation cost
+
+**Placement**
+- Enterprise only (research-heavy)
+
+---
+
+## R29 Predictive Maintenance Evidence
+
+**Hypothesis:** Anomaly detection models running on-device can produce cryptographically attested maintenance predictions, combining integrity evidence with operational intelligence.
+
+**Milestones**
+1. Define attestation format for model predictions: model ID, input hash, output, confidence.
+2. Implement lightweight anomaly detection (statistical + optional TinyML).
+3. Sign predictions as special log entry kind with model provenance.
+4. Add verifiable model update protocol: prove that a model update was authorized.
+5. Energy-aware inference scheduling (integrate with R01).
+
+**Metrics**
+- prediction accuracy (F1, precision, recall)
+- energy per inference
+- attestation overhead
+- model update verification time
+
+**Placement**
+- Base: attestation format + statistical anomaly detection
+- Enterprise: TinyML models, update protocol, fleet-wide dashboards
+
+---
+
+## R30 Fleet-Wide Integrity Dashboards
+
+**Hypothesis:** Aggregated compliance and integrity status across a fleet of devices can be computed and displayed without collecting raw log data.
+
+**Milestones**
+1. Define fleet status aggregation protocol: devices submit signed summaries.
+2. Implement dashboard backend: collect summaries, compute fleet-wide metrics.
+3. Add anomaly detection at fleet level: detect devices with integrity failures.
+4. Integrate with R26 anchoring: show anchor freshness per device.
+5. Add ZK-based fleet attestation: prove "all devices in fleet pass integrity check."
+
+**Metrics**
+- dashboard update latency
+- bandwidth per device summary
+- false positive rate for fleet anomaly detection
+- ZK fleet attestation proof size
+
+**Placement**
+- Enterprise only
+
+---
+
 ## Cross-track integration plan
 
 1. Start with R04/R09 (integrity primitives) ✅
@@ -422,4 +647,9 @@ To keep the tracks comparable, create a shared benchmarking and evaluation setup
 3. Add R03 DP for sensitive telemetry
 4. Build admin console panels as instrumentation endpoints
 5. Add enterprise ZK layer (R02/R15) once base format is stable
+6. R25 hardware acceleration feeds into R02 ZK performance
+7. R22 PQ migration depends on stable entry format (Phase 1)
+8. R26 anchoring builds on R10 checkpoint infrastructure
+9. R21 recursive aggregation requires R02 proof format first
+10. R30 fleet dashboards integrate R26 anchoring + R12 anomaly triggers
 

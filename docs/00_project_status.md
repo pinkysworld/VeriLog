@@ -44,11 +44,19 @@ is ready for external pilots.
 
 ## Current gaps
 
-- Append durability still needs explicit `fsync` hardening and crash-recovery tests.
+- ~~Append durability still needs explicit `fsync` hardening and crash-recovery tests.~~ → **Implemented.** Durable append with `fsync` on entries, leaves, and atomic meta writes.
 - Proof generation is correct but still uses a simple full-leaf load path.
 - The admin console is local-first and intentionally unauthenticated for prototype speed.
 - Differential privacy and energy scheduling exist as early primitives, not polished product modules yet.
 - No external anchoring backend or third-party verifier has been published yet.
+
+## Recently completed
+
+- **Durable append protocol:** `fsync` boundaries on `entries.bin`, `leaves.bin`, and atomic `meta.json` writes with parent directory sync.
+- **Structured configuration:** `config.toml` support with defaults for store, admin, privacy, and retention settings. Generated automatically on `init`.
+- **Golden vector test suite:** 8 deterministic test fixtures covering empty roots, hash chains, membership proofs, checkpoints, tamper detection, leaf hashes, and export format stability.
+- **Research agenda expansion:** 30 research tracks (R01–R30) across four pillars: integrity/ZK, privacy/DP, energy/efficiency, and federation/multi-device.
+- **Website redesign:** Professional multi-section site with submenus, architecture diagrams, security model, privacy pipeline, research pillars, novelty wedges, timeline roadmap, and separate documentation page.
 
 ## Delivery posture
 

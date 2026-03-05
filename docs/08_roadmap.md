@@ -18,10 +18,10 @@ while enterprise research tracks can proceed in parallel.
 
 ## Phase 1 — Base hardening
 
-- [ ] Power-loss safe append protocol
+- [x] Power-loss safe append protocol (fsync on entries, leaves, atomic meta writes)
 - [ ] Backpressure + bounded memory
-- [ ] Config system (TOML) with defaults
-- [ ] Durable fsync boundaries + corruption recovery tests
+- [x] Config system (TOML) with defaults (store, admin, privacy, retention)
+- [x] Durable fsync boundaries + golden vector test fixtures (8 tests)
 - [ ] Storage backend abstraction (file / flash / ring buffer)
 - [ ] Threat model sign-off + security review
 
@@ -42,7 +42,7 @@ while enterprise research tracks can proceed in parallel.
 
 ## Phase 4 — Publication / standardization
 
-- [ ] Launch the public project site (`site/`) with deployment polish
+- [x] Launch the public project site (`site/`) with professional redesign and docs subpage
 - [ ] Formal spec of the log format
 - [ ] Third-party verifier reference implementation
 - [ ] Interop test suite

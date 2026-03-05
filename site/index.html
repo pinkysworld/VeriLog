@@ -4,140 +4,544 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VeriLog | Verifiable Edge Evidence</title>
-    <meta
-      name="description"
-      content="VeriLog is a Rust-based edge logging engine for tamper-evident device evidence, privacy-aware telemetry, and future zero-knowledge integrity proofs."
-    >
+    <meta name="description" content="VeriLog is a Rust-based edge logging engine for tamper-evident device evidence, privacy-aware telemetry, and future zero-knowledge integrity proofs.">
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <div class="page-shell">
-      <header class="hero">
-        <nav class="topbar">
-          <a class="brand" href="./index.html">VeriLog</a>
-          <div class="nav-links">
-            <a href="#prototype">Prototype</a>
-            <a href="#research">Research</a>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <a class="brand" href="./index.html">
+          <span class="brand-icon">&#9670;</span> VeriLog
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-menu" id="navMenu">
+          <div class="nav-group">
+            <a href="#overview">Overview</a>
+            <div class="dropdown">
+              <button class="dropdown-trigger">Technology <span class="caret">&#9662;</span></button>
+              <div class="dropdown-menu">
+                <a href="#architecture">Architecture</a>
+                <a href="#security">Security Model</a>
+                <a href="#privacy">Privacy &amp; DP</a>
+                <a href="#merkle">Merkle Proofs</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <button class="dropdown-trigger">Research <span class="caret">&#9662;</span></button>
+              <div class="dropdown-menu dropdown-wide">
+                <div class="dropdown-section">
+                  <span class="dropdown-heading">Core Tracks</span>
+                  <a href="#research">Research Agenda</a>
+                  <a href="#novelty">Novelty Program</a>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-section">
+                  <span class="dropdown-heading">Focus Areas</span>
+                  <a href="#zk-research">Zero-Knowledge Proofs</a>
+                  <a href="#dp-research">Differential Privacy</a>
+                  <a href="#energy-research">Energy-Aware Systems</a>
+                  <a href="#mesh-research">Mesh &amp; Federation</a>
+                </div>
+              </div>
+            </div>
             <a href="#roadmap">Roadmap</a>
+            <a href="./docs.html">Docs</a>
           </div>
-        </nav>
+          <a class="nav-cta" href="https://github.com">GitHub</a>
+        </div>
+      </div>
+    </nav>
 
-        <div class="hero-copy">
-          <p class="eyebrow">Rust edge systems · auditable by design</p>
-          <h1>Build logs you can prove, not just collect.</h1>
-          <p class="lede">
-            VeriLog turns device telemetry into a verifiable evidence stream:
-            append-only records, signed checkpoints, privacy-aware payloads, and
-            a clear path toward zero-knowledge integrity proofs.
+    <!-- Hero -->
+    <header class="hero" id="overview">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">Open-source &middot; Rust &middot; Edge-native</div>
+          <h1>Build logs<br>you can <em>prove</em>,<br>not just collect.</h1>
+          <p class="hero-lead">
+            VeriLog turns device telemetry into a verifiable evidence stream: append-only
+            records, signed checkpoints, privacy-aware payloads, and a clear path toward
+            zero-knowledge integrity proofs &mdash; all in a single binary.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#prototype">Explore The Prototype</a>
-            <a class="button secondary" href="#research">See The Novelty Program</a>
+            <a class="btn btn-primary" href="#prototype">Explore the Prototype</a>
+            <a class="btn btn-outline" href="#research">Research Agenda</a>
           </div>
         </div>
-
-        <section class="hero-band">
-          <article class="stat-card">
-            <span class="stat-value">1</span>
-            <span class="stat-label">single binary</span>
-          </article>
-          <article class="stat-card">
-            <span class="stat-value">4</span>
-            <span class="stat-label">trust layers combined</span>
-          </article>
-          <article class="stat-card">
-            <span class="stat-value">MVP</span>
-            <span class="stat-label">prototype stage today</span>
-          </article>
-        </section>
-      </header>
-
-      <main>
-        <section class="section" id="prototype">
-          <div class="section-heading">
-            <p class="eyebrow">Shipping now</p>
-            <h2>What already runs</h2>
+        <div class="hero-visual">
+          <div class="trust-stack">
+            <div class="trust-layer" data-layer="4">
+              <span class="layer-num">04</span>
+              <span class="layer-label">Zero-Knowledge Proofs</span>
+              <span class="layer-status upcoming">Research</span>
+            </div>
+            <div class="trust-layer" data-layer="3">
+              <span class="layer-num">03</span>
+              <span class="layer-label">Differential Privacy</span>
+              <span class="layer-status active">In Progress</span>
+            </div>
+            <div class="trust-layer" data-layer="2">
+              <span class="layer-num">02</span>
+              <span class="layer-label">Merkle Commitments</span>
+              <span class="layer-status shipped">Shipped</span>
+            </div>
+            <div class="trust-layer" data-layer="1">
+              <span class="layer-num">01</span>
+              <span class="layer-label">Signed Hash Chain</span>
+              <span class="layer-status shipped">Shipped</span>
+            </div>
           </div>
-          <div class="grid two-up">
-            <article class="panel feature-panel">
-              <h3>Operational core</h3>
-              <ul class="feature-list">
-                <li>append-only signed log records</li>
-                <li>Merkle-root commitments per entry</li>
-                <li>deterministic full-store verification</li>
-                <li>membership proof generation and verification</li>
-                <li>signed checkpoints for archival and anchoring</li>
-                <li>local admin console for demos and inspection</li>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Banner -->
+    <section class="stats-banner">
+      <div class="container">
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-number">1</span>
+            <span class="stat-desc">Single binary<br>deployment</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-number">4</span>
+            <span class="stat-desc">Trust layers<br>combined</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-number">30</span>
+            <span class="stat-desc">Research tracks<br>defined</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-number">0</span>
+            <span class="stat-desc">External service<br>dependencies</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prototype Section -->
+    <section class="section" id="prototype">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Shipping Now</span>
+          <h2>What already runs</h2>
+          <p class="section-lead">The open-source base edition provides a complete tamper-evident logging lifecycle for edge devices.</p>
+        </div>
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">&#128274;</div>
+            <h3>Append-Only Signed Records</h3>
+            <p>Every log entry is Ed25519-signed with hash-chain linkage. Tampering with any entry breaks the chain.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#127795;</div>
+            <h3>Merkle Root Commitments</h3>
+            <p>Fixed-height incremental Merkle tree with per-entry root updates. O(height) cost per append operation.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#128269;</div>
+            <h3>Membership Proofs</h3>
+            <p>Generate and verify inclusion proofs for any entry without revealing other records in the log.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#9989;</div>
+            <h3>Full Store Verification</h3>
+            <p>Deterministic re-verification of the entire hash chain, signatures, and Merkle roots from stored data.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#128203;</div>
+            <h3>Signed Checkpoints</h3>
+            <p>Portable, signed snapshots for archival anchoring, external timestamping, and third-party audit workflows.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">&#128421;</div>
+            <h3>Admin Console</h3>
+            <p>Local HTTP dashboard for demo and inspection: status, proofs, checkpoints, and research instrumentation.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section class="section section-alt" id="architecture">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Architecture</span>
+          <h2>Designed for trust at the edge</h2>
+          <p class="section-lead">Four crates, one binary. Clean separation of concerns with explicit trust boundaries.</p>
+        </div>
+        <div class="arch-diagram">
+          <div class="arch-row">
+            <div class="arch-box arch-binary">
+              <div class="arch-title">verilogd</div>
+              <div class="arch-desc">CLI + Admin Console + License Gate</div>
+            </div>
+          </div>
+          <div class="arch-connector"></div>
+          <div class="arch-row arch-row-libs">
+            <div class="arch-box arch-core">
+              <div class="arch-title">verilog-core</div>
+              <div class="arch-desc">LogStore &middot; Merkle &middot; Crypto &middot; DP &middot; Energy</div>
+            </div>
+            <div class="arch-box arch-license">
+              <div class="arch-title">verilog-license</div>
+              <div class="arch-desc">Ed25519 License Verification</div>
+            </div>
+            <div class="arch-box arch-enterprise">
+              <div class="arch-title">verilog-enterprise-api</div>
+              <div class="arch-desc">Feature Traits &amp; Hooks</div>
+            </div>
+          </div>
+          <div class="arch-connector"></div>
+          <div class="arch-row">
+            <div class="arch-box arch-storage">
+              <div class="arch-title">Storage Layer</div>
+              <div class="arch-desc">entries.bin &middot; leaves.bin &middot; meta.json &middot; signing_key.json</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Security Model -->
+    <section class="section" id="security">
+      <div class="container">
+        <div class="two-col">
+          <div class="col-text">
+            <span class="section-tag">Security</span>
+            <h2>Threat model built for hostile environments</h2>
+            <p>VeriLog assumes the device may be compromised <em>after</em> evidence is captured. The system provides tamper-evidence, not tamper-prevention.</p>
+            <ul class="check-list">
+              <li>Hash chain detects any modification to past entries</li>
+              <li>Ed25519 signatures prevent forged entries</li>
+              <li>Merkle roots provide compact integrity commitments</li>
+              <li>Rolling window hash enables forensic post-compromise analysis</li>
+              <li>Signed checkpoints create verifiable anchoring points</li>
+              <li>No required network services &mdash; offline-first by design</li>
+            </ul>
+          </div>
+          <div class="col-visual">
+            <div class="threat-card">
+              <h4>Adversary capabilities assumed</h4>
+              <div class="threat-item">
+                <span class="threat-icon threat-covered">&#10004;</span>
+                <span>Log truncation after compromise</span>
+              </div>
+              <div class="threat-item">
+                <span class="threat-icon threat-covered">&#10004;</span>
+                <span>Entry modification (detected via hash chain)</span>
+              </div>
+              <div class="threat-item">
+                <span class="threat-icon threat-covered">&#10004;</span>
+                <span>Fake entry insertion (detected via signatures)</span>
+              </div>
+              <div class="threat-item">
+                <span class="threat-icon threat-covered">&#10004;</span>
+                <span>Flash bit flips / power-loss corruption</span>
+              </div>
+              <div class="threat-item">
+                <span class="threat-icon threat-future">&#9679;</span>
+                <span>Key compromise (future: ratcheting)</span>
+              </div>
+              <div class="threat-item">
+                <span class="threat-icon threat-future">&#9679;</span>
+                <span>Full device takeover (future: remote anchoring)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section class="section section-alt" id="privacy">
+      <div class="container">
+        <div class="two-col reverse">
+          <div class="col-visual">
+            <div class="dp-visual">
+              <div class="dp-pipeline">
+                <div class="dp-stage">
+                  <span class="dp-stage-num">1</span>
+                  <span class="dp-stage-label">Raw telemetry</span>
+                </div>
+                <div class="dp-arrow">&rarr;</div>
+                <div class="dp-stage dp-stage-highlight">
+                  <span class="dp-stage-num">2</span>
+                  <span class="dp-stage-label">DP noise + budget</span>
+                </div>
+                <div class="dp-arrow">&rarr;</div>
+                <div class="dp-stage">
+                  <span class="dp-stage-num">3</span>
+                  <span class="dp-stage-label">Signed evidence</span>
+                </div>
+              </div>
+              <div class="dp-note">Privacy and integrity share the same proof surface</div>
+            </div>
+          </div>
+          <div class="col-text">
+            <span class="section-tag">Privacy</span>
+            <h2>Differential privacy meets verifiable evidence</h2>
+            <p>Privacy controls are not bolted on &mdash; they are part of the evidence pipeline. Budget tracking and noise application happen before signing.</p>
+            <ul class="check-list">
+              <li>Per-event Laplace noise for numeric telemetry</li>
+              <li>Token-bucket privacy budget management</li>
+              <li>Schema-driven redaction policies (planned)</li>
+              <li>Future: ZK proofs of correct DP application</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Merkle Proofs -->
+    <section class="section" id="merkle">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Cryptography</span>
+          <h2>Merkle frontier: compact, incremental, verifiable</h2>
+          <p class="section-lead">A fixed-height incremental Merkle tree provides O(height) updates and compact membership proofs without storing the entire tree.</p>
+        </div>
+        <div class="merkle-features">
+          <div class="merkle-card">
+            <h4>Append</h4>
+            <div class="merkle-metric">O(h)</div>
+            <p>Insert a leaf and update the frontier in height steps. No rebalancing.</p>
+          </div>
+          <div class="merkle-card">
+            <h4>Proof Size</h4>
+            <div class="merkle-metric">32 &times; h bytes</div>
+            <p>Membership proofs are a sibling path: one 32-byte hash per tree level.</p>
+          </div>
+          <div class="merkle-card">
+            <h4>Verification</h4>
+            <div class="merkle-metric">O(h)</div>
+            <p>Re-hash from leaf to root using the sibling path. Compare against the committed root.</p>
+          </div>
+          <div class="merkle-card">
+            <h4>Default Height</h4>
+            <div class="merkle-metric">32 levels</div>
+            <p>Supports up to 4 billion entries. Configurable at store initialization.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Research Tracks Section -->
+    <section class="section section-dark" id="research">
+      <div class="container">
+        <div class="section-header light">
+          <span class="section-tag">Research Agenda</span>
+          <h2>30 research tracks driving the future of verifiable telemetry</h2>
+          <p class="section-lead">Organized across four pillars: integrity, privacy, efficiency, and federation. Each track has defined hypotheses, milestones, and metrics.</p>
+        </div>
+        <div class="research-pillars">
+          <div class="pillar" id="zk-research">
+            <div class="pillar-header">
+              <span class="pillar-icon">&#128737;</span>
+              <h3>Integrity &amp; Zero-Knowledge</h3>
+            </div>
+            <div class="track-list" id="tracks-integrity"></div>
+          </div>
+          <div class="pillar" id="dp-research">
+            <div class="pillar-header">
+              <span class="pillar-icon">&#128272;</span>
+              <h3>Privacy &amp; Differential Privacy</h3>
+            </div>
+            <div class="track-list" id="tracks-privacy"></div>
+          </div>
+          <div class="pillar" id="energy-research">
+            <div class="pillar-header">
+              <span class="pillar-icon">&#9889;</span>
+              <h3>Energy &amp; Efficiency</h3>
+            </div>
+            <div class="track-list" id="tracks-energy"></div>
+          </div>
+          <div class="pillar" id="mesh-research">
+            <div class="pillar-header">
+              <span class="pillar-icon">&#127760;</span>
+              <h3>Federation &amp; Multi-Device</h3>
+            </div>
+            <div class="track-list" id="tracks-federation"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Novelty Program -->
+    <section class="section" id="novelty">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Novelty Program</span>
+          <h2>What makes VeriLog genuinely different</h2>
+          <p class="section-lead">Most products cover one or two of these wedges. VeriLog treats them as one protocol family.</p>
+        </div>
+        <div class="wedge-grid">
+          <article class="wedge-card">
+            <div class="wedge-letter">A</div>
+            <h3>Evidence-First Edge Telemetry</h3>
+            <p>Not just logging &mdash; <strong>evidence capture</strong> on unreliable devices. Tamper detection after compromise, portable proof bundles, and third-party validation without device secrets.</p>
+            <span class="wedge-status">Foundation &mdash; partially realized</span>
+          </article>
+          <article class="wedge-card">
+            <div class="wedge-letter">B</div>
+            <h3>Privacy-Preserving Observability</h3>
+            <p>Differential privacy on the same proof surface as integrity. Auditors verify policy conformance without seeing raw telemetry.</p>
+            <span class="wedge-status">In progress &mdash; base DP primitives shipped</span>
+          </article>
+          <article class="wedge-card">
+            <div class="wedge-letter">C</div>
+            <h3>Verifiable Archival &amp; Selective Disclosure</h3>
+            <p>Signed checkpoints bridge local logs to long-term archives, external timestamping, and compliance review.</p>
+            <span class="wedge-status">Active &mdash; checkpoint system shipped</span>
+          </article>
+          <article class="wedge-card">
+            <div class="wedge-letter">D</div>
+            <h3>Multi-Device Evidence Graphs</h3>
+            <p>The long-term leap: correlated evidence transcripts with verifiable forwarding and mesh synchronization.</p>
+            <span class="wedge-status">Research &mdash; transcript formats planned</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section class="section section-alt" id="roadmap">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Execution</span>
+          <h2>Roadmap</h2>
+          <p class="section-lead">Phased approach: stable base edition first, enterprise research in parallel.</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item done">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-phase">Phase 0 &mdash; Core Scaffolding</div>
+              <h3>Foundation</h3>
+              <ul>
+                <li>Store initialization &amp; key generation</li>
+                <li>Append-only log with signatures + hash chain</li>
+                <li>Incremental Merkle frontier</li>
+                <li>Verification, membership proofs, checkpoints</li>
+                <li>License verification + admin console MVP</li>
               </ul>
-            </article>
-            <article class="panel quote-panel">
-              <p>
-                The product is positioned as an <strong>evidence layer for edge
-                devices</strong>, not just a logging library. That framing is the
-                shortest path to a differentiated story.
-              </p>
-            </article>
+              <span class="timeline-badge badge-done">Complete</span>
+            </div>
           </div>
-        </section>
+          <div class="timeline-item active">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-phase">Phase 1 &mdash; Base Hardening</div>
+              <h3>Production-Ready Core</h3>
+              <ul>
+                <li>Power-loss safe append protocol (fsync)</li>
+                <li>Config system (TOML) with defaults</li>
+                <li>Golden vector test fixtures</li>
+                <li>Storage backend abstraction</li>
+                <li>Benchmark harness across device classes</li>
+              </ul>
+              <span class="timeline-badge badge-active">In Progress</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-phase">Phase 2 &mdash; Privacy &amp; Energy</div>
+              <h3>Trust Surface Expansion</h3>
+              <ul>
+                <li>DP schemas for common telemetry events</li>
+                <li>Per-event DP accounting tests</li>
+                <li>Energy policy improvements</li>
+                <li>Compression options</li>
+              </ul>
+              <span class="timeline-badge">Planned</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-phase">Phase 3 &mdash; Enterprise</div>
+              <h3>Advanced Cryptographic Features</h3>
+              <ul>
+                <li>ZK proofs of integrity (Halo2/Plonky3)</li>
+                <li>Compliance export bundles</li>
+                <li>Mesh sync and forwarding</li>
+                <li>PSI correlation &amp; ZK range queries</li>
+              </ul>
+              <span class="timeline-badge">Research</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-phase">Phase 4 &mdash; Publication</div>
+              <h3>Standardization &amp; Interop</h3>
+              <ul>
+                <li>Formal log format specification</li>
+                <li>Third-party verifier implementation</li>
+                <li>Interop test suite</li>
+              </ul>
+              <span class="timeline-badge">Future</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <section class="section ribbon-section">
-          <div class="ribbon">
-            <span>tamper-evident</span>
-            <span>privacy-aware</span>
-            <span>portable proofs</span>
-            <span>zero-knowledge ready</span>
+    <!-- CTA Footer -->
+    <section class="section section-dark">
+      <div class="container">
+        <div class="cta-footer">
+          <h2>Ready to explore verifiable telemetry?</h2>
+          <p>VeriLog is open-source and designed to be evaluated hands-on. Clone the repo, initialize a store, and see tamper-evident logging in action.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary btn-lg" href="https://github.com">Get Started on GitHub</a>
+            <a class="btn btn-ghost" href="./docs.html">Read the Documentation</a>
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
 
-        <section class="section" id="research">
-          <div class="section-heading">
-            <p class="eyebrow">Novel direction</p>
-            <h2>Why this can become genuinely novel</h2>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <span class="brand"><span class="brand-icon">&#9670;</span> VeriLog</span>
+            <p>Verifiable edge evidence.<br>Rust &middot; Open Source &middot; Research-Driven</p>
           </div>
-          <div class="grid card-grid" id="track-grid"></div>
-        </section>
-
-        <section class="section" id="roadmap">
-          <div class="section-heading">
-            <p class="eyebrow">Execution</p>
-            <h2>Research sequence that preserves product momentum</h2>
+          <div class="footer-links">
+            <h4>Technology</h4>
+            <a href="#architecture">Architecture</a>
+            <a href="#security">Security Model</a>
+            <a href="#privacy">Privacy &amp; DP</a>
+            <a href="#merkle">Merkle Proofs</a>
           </div>
-          <div class="grid roadmap-grid">
-            <article class="panel roadmap-step">
-              <span class="step-index">01</span>
-              <h3>Harden the base</h3>
-              <p>Durable writes, golden vectors, indexed proofs, safer admin access.</p>
-            </article>
-            <article class="panel roadmap-step">
-              <span class="step-index">02</span>
-              <h3>Ship checkpoint workflows</h3>
-              <p>Anchoring, third-party verification, and portable audit bundles.</p>
-            </article>
-            <article class="panel roadmap-step">
-              <span class="step-index">03</span>
-              <h3>Upgrade privacy surfaces</h3>
-              <p>Schema packs, accounting visibility, and policy-backed telemetry handling.</p>
-            </article>
-            <article class="panel roadmap-step">
-              <span class="step-index">04</span>
-              <h3>Parallel proof research</h3>
-              <p>Poseidon commitments, small-scope ZK experiments, and selective disclosure.</p>
-            </article>
+          <div class="footer-links">
+            <h4>Research</h4>
+            <a href="#research">Research Agenda</a>
+            <a href="#novelty">Novelty Program</a>
+            <a href="#zk-research">Zero-Knowledge</a>
+            <a href="#mesh-research">Mesh &amp; Federation</a>
           </div>
-        </section>
-
-        <section class="section final-cta">
-          <div class="panel cta-panel">
-            <p class="eyebrow">Deployment-ready presentation</p>
-            <h2>Use this page as the project showcase for GitHub Pages or `minh.systems`.</h2>
-            <p>
-              The site is fully static, uses relative asset paths, and is designed
-              to work both from a repository subpath and a custom domain mirror.
-            </p>
+          <div class="footer-links">
+            <h4>Project</h4>
+            <a href="#roadmap">Roadmap</a>
+            <a href="./docs.html">Documentation</a>
+            <a href="https://github.com">GitHub</a>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 VeriLog Project. Open-source under MIT/Apache-2.0.</p>
+        </div>
+      </div>
+    </footer>
 
     <script src="./app.js"></script>
   </body>

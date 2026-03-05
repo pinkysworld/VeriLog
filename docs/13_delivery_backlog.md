@@ -5,10 +5,10 @@ iterations, not by what is easiest to build.
 
 ## Now
 
-- [ ] Add explicit durable-append boundaries (`fsync`) and recovery tests.
+- [x] Add explicit durable-append boundaries (`fsync`) and recovery tests.
 - [ ] Add an indexed proof path so large stores do not need full leaf scans.
-- [ ] Publish golden-vector fixtures for entries, proofs, and checkpoints.
-- [ ] Add structured config (`config.toml`) for tree height, admin bind, and retention.
+- [x] Publish golden-vector fixtures for entries, proofs, and checkpoints.
+- [x] Add structured config (`config.toml`) for tree height, admin bind, and retention.
 - [ ] Add CLI integration tests for `status`, `checkpoint`, and export flows.
 - [ ] Add minimal auth strategy for the admin console (token or mTLS-ready config).
 
@@ -32,7 +32,7 @@ iterations, not by what is easiest to build.
 ## Product-facing deliverables
 
 - [ ] Record a scripted demo using the admin console plus CLI checkpoints.
-- [ ] Publish the `site/` showcase through GitHub Pages.
+- [x] Publish the `site/` showcase with professional redesign, submenus, and documentation subpage.
 - [ ] Prepare a one-page architecture brief for prospective partners.
 - [ ] Freeze the v1 storage/proof/checkpoint format before outside integrations.
 

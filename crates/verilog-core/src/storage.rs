@@ -129,8 +129,21 @@ fn leaf_hash_from_unsigned(u: &LogEntryUnsigned) -> Result<Hash32, VeriLogError>
 
 fn write_atomic(path: &Path, bytes: &[u8]) -> Result<(), VeriLogError> {
     let tmp = path.with_extension("tmp");
-    std::fs::write(&tmp, bytes)?;
+    {
+        let f = std::fs::File::create(&tmp)?;
+        let mut w = std::io::BufWriter::new(f);
+        w.write_all(bytes)?;
+        w.flush()?;
+        // Ensure data reaches durable storage before rename.
+        w.get_ref().sync_all()?;
+    }
     std::fs::rename(&tmp, path)?;
+    // Sync the parent directory so the rename is durable.
+    if let Some(parent) = path.parent() {
+        if let Ok(d) = std::fs::File::open(parent) {
+            let _ = d.sync_all();
+        }
+    }
     Ok(())
 }
 
@@ -379,7 +392,7 @@ impl LogStore {
             signature: sig.to_bytes(),
         };
 
-        // Append to entries.bin.
+        // Append to entries.bin with durable fsync.
         let rec = entry.to_canonical_bytes()?;
         let mut f = OpenOptions::new()
             .create(true)
@@ -387,14 +400,16 @@ impl LogStore {
             .open(self.dir.join(ENTRIES_FILE))?;
         write_len_prefixed(&mut f, &rec)?;
         f.flush()?;
+        f.sync_all()?;
 
-        // Append leaf hash to leaves.bin.
+        // Append leaf hash to leaves.bin with durable fsync.
         let mut lf = OpenOptions::new()
             .create(true)
             .append(true)
             .open(self.dir.join(LEAVES_FILE))?;
         lf.write_all(&leaf_hash)?;
         lf.flush()?;
+        lf.sync_all()?;
 
         // Update in-memory meta state.
         self.prev_entry_hash = entry_hash;

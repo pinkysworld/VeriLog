@@ -1,5 +1,6 @@
 #[allow(dead_code)]
 mod cli;
+mod config;
 #[allow(dead_code)]
 mod enterprise_gate;
 #[cfg(feature = "admin-console")]
@@ -85,6 +86,10 @@ fn main() -> Result<()> {
         Command::Init { store, tree_height } => {
             verilog_core::storage::LogStore::init(&store, tree_height)
                 .with_context(|| format!("init store at {}", store.display()))?;
+            // Generate a default config.toml alongside the store.
+            let config_path = store.join("config.toml");
+            config::Config::init_default(&config_path)
+                .with_context(|| "write default config.toml")?;
             println!("Initialized store at {}", store.display());
             Ok(())
         }
